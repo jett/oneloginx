@@ -1,7 +1,5 @@
 package onelogin1x
 
-import com.demo.UserRegistry
-
 class DemoController {
 
     def userRegistry
@@ -23,11 +21,13 @@ class DemoController {
 
         println 'userRegistry Bean: ' + userRegistry
 
-
-        if(userRegistry.registerUser(params.userid)) {
-            session['user'] = params.userid
-        } else {
-            flash.message = 'you are already logged in from another terminal!'
+        if(params.userid) {
+            //if(userRegistry.registerUser(params.userid)) {
+            if(userRegistry.registerUserSession(params.userid, session.id)) {
+                session['user'] = params.userid
+            } else {
+                flash.message = 'you are already logged in from another terminal!'
+            }
         }
 
         forward(action: 'login')
@@ -47,8 +47,22 @@ class DemoController {
     def check = {
 
         def users = userRegistry.getLoggedInUsers()
+        def sessions = userRegistry.getSessions()
 
-        render(view:'check', model: [users:users])
 
+        render(view:'check', model: [users:users, sessions: sessions])
+
+    }
+
+    def kill = {
+
+        println "params are = " + params
+
+        String sessionId = params.id
+        if(sessionId) {
+            userRegistry.terminateSession(params.id)
+        }
+
+        forward(action:'check')
     }
 }
