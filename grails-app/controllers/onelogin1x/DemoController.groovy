@@ -65,4 +65,11 @@ class DemoController {
 
         forward(action:'check')
     }
+
+
+    def keepAlive = {
+
+        // keep this session alive in the registry
+        userRegistry.keepSessionAlive(session.id)
+    }
 }

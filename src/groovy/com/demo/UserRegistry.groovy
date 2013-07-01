@@ -45,10 +45,23 @@ class UserRegistry {
             existingDetails.put("userid", username)
 
             sessionIdRegistry.put(sessionId, existingDetails)
-            //sessionIdRegistry.put(sessionId, [userid: username])
 
             return true;
         }
+    }
+
+    void keepSessionAlive(String sessionId) {
+
+
+        Map existingDetails = sessionIdRegistry.get(sessionId)
+
+        // check if there is a userid, only then will we add a session alive attribute
+        if(existingDetails?.userid) {
+            existingDetails.put("lastPing", new Date())
+        }
+
+        sessionIdRegistry.put(sessionId, existingDetails)
+
     }
 
     void terminateSession(String sessionId) {
