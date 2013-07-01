@@ -1,11 +1,12 @@
 package com.demo
 
 import javax.servlet.http.HttpSession
+import java.util.concurrent.ConcurrentHashMap
 
 class UserRegistry {
 
-    HashMap<String, Object> loggedInUsers;
-    HashMap<String,Object> sessionIdRegistry;
+    ConcurrentHashMap<String, Object> loggedInUsers;
+    ConcurrentHashMap<String,Object> sessionIdRegistry;
 
     UserRegistry() {
         loggedInUsers = [:]
@@ -16,23 +17,9 @@ class UserRegistry {
         sessionIdRegistry.put(sessionId, sessionDetails)
     }
 
-    Boolean registerUser(String username) {
-
-        println 'checking ' + username + '...'
-
-        if(loggedInUsers.containsKey(username)) {
-            // user already exists, return false
-            return false;
-        } else {
-            // user does not exist, add to registry
-            loggedInUsers.put(username, [registrationDate: new Date()])
-            return true;
-        }
-    }
-
     Boolean registerUserSession(String username, String sessionId) {
 
-        println 'checking ' + username + '...'
+        //println 'checking ' + username + '...'
 
         if(loggedInUsers.containsKey(username)) {
             // user already exists, return false
@@ -52,15 +39,14 @@ class UserRegistry {
 
     void keepSessionAlive(String sessionId) {
 
-
         Map existingDetails = sessionIdRegistry.get(sessionId)
 
         // check if there is a userid, only then will we add a session alive attribute
         if(existingDetails?.userid) {
+            existingDetails.remove("lastPing")
             existingDetails.put("lastPing", new Date())
+            sessionIdRegistry.put(sessionId, existingDetails)
         }
-
-        sessionIdRegistry.put(sessionId, existingDetails)
 
     }
 

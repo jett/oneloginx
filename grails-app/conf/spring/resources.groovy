@@ -16,7 +16,7 @@ beans = {
     }
 
     scheduledExecutorTask(org.springframework.scheduling.concurrent.ScheduledExecutorTask) {
-        period = 5000
+        period = 15000
         runnable = ref('sessionSweeper')
     }
 

@@ -19,12 +19,10 @@ class DemoController {
             forward(action: 'login')
         }
 
-        println 'userRegistry Bean: ' + userRegistry
-
         if(params.userid) {
             //if(userRegistry.registerUser(params.userid)) {
             if(userRegistry.registerUserSession(params.userid, session.id)) {
-                session['user'] = params.userid
+                session['userName'] = params.userid
             } else {
                 flash.message = 'you are already logged in from another terminal!'
             }
@@ -56,7 +54,7 @@ class DemoController {
 
     def kill = {
 
-        println "params are = " + params
+        //println "params are = " + params
 
         String sessionId = params.id
         if(sessionId) {
@@ -70,6 +68,10 @@ class DemoController {
     def keepAlive = {
 
         // keep this session alive in the registry
+        //println "keep alive called for session ${session.id}"
+        //println params
+
         userRegistry.keepSessionAlive(session.id)
+        render "."
     }
 }

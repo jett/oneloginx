@@ -1,10 +1,11 @@
 <html>
 <head>
+    <meta name="layout" content="main"/>
 </head>
 <body>
-    <g:if test="${session.user}">
+    <g:if test="${session.userName}">
         <g:form action="logout">
-            you are logged in ${session.user}<br/>
+            you are logged in ${session.userName}<br/>
             <g:submitButton name="logout"/>
         </g:form >
     </g:if>

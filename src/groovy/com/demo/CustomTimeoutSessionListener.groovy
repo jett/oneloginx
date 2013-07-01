@@ -50,7 +50,7 @@ class CustomTimeoutSessionListener implements HttpSessionListener {
     @Override
     void sessionDestroyed(HttpSessionEvent httpSessionEvent) {
 
-        String username = httpSessionEvent.session.getAttribute('user')
+        String username = httpSessionEvent.session.getAttribute('userName')
         String sessionId = httpSessionEvent.session.id
 
         // get the context so we can get the userRegistry bean
