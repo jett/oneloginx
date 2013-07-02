@@ -31,6 +31,8 @@ class SessionSweeper implements Runnable {
 
             HttpSession session = (HttpSession) properties.session
 
+            println "sweeper."
+
             // get lastPing and compute duration
             if(lastPing) {
                 Date now = new Date();
@@ -38,7 +40,17 @@ class SessionSweeper implements Runnable {
 
                 // check against timeout and force expire
                 if(td.seconds > 15) {
-                    userRegistry.terminateSession(session.id)
+
+                    String sessionId = session.id
+                    String username  = session.getAttribute("userName")
+
+                    println "invalidating from the sweeper $username - $sessionId"
+
+                    userRegistry.terminateSession(sessionId)
+
+                    userRegistry.unregisterUser(username)
+                    userRegistry.unregisterSession(sessionId)
+
                 }
 
                 println "$now - $lastPing = $td.seconds"

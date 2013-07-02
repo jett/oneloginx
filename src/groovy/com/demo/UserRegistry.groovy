@@ -30,6 +30,7 @@ class UserRegistry {
 
             Map existingDetails = sessionIdRegistry.get(sessionId)
             existingDetails.put("userid", username)
+            existingDetails.put("lastPing", new Date())
 
             sessionIdRegistry.put(sessionId, existingDetails)
 
@@ -61,6 +62,7 @@ class UserRegistry {
 
             println "invalidating sessionid ${session.id}"
 
+            // this does not work in WAS when called from the sweeper
             session.invalidate()
 
         } else {
@@ -72,11 +74,16 @@ class UserRegistry {
     }
 
     def unregisterUser(String username) {
-        loggedInUsers.remove(username)
+        if(username != null && loggedInUsers.containsKey(username)) {
+            loggedInUsers.remove(username)
+        }
+
     }
 
     def unregisterSession(String sessionId) {
-        sessionIdRegistry.remove(sessionId)
+        if(sessionId != null && sessionIdRegistry.containsKey(sessionId)) {
+            sessionIdRegistry.remove(sessionId)
+        }
     }
 
     Map getLoggedInUsers() {
